@@ -51,6 +51,7 @@ use pocketmine\OfflinePlayer;
 use pocketmine\permission\Permission;
 use pocketmine\Player;
 use pocketmine\Server;
+use pocketmine\utils\Color;
 use pocketmine\utils\Config;
 use pocketmine\utils\Random;
 use pocketmine\utils\TextFormat;
@@ -1214,7 +1215,7 @@ class BaseAPI{
     }
 
     /**
-     * Checks if a name is valid, it could be for a Nick, Home, Warp, etc...
+     * Checks if a name is valid, it could be for a Home, Warp, etc...
      *
      * @param string $string
      * @param bool $allowColorCodes
@@ -1292,7 +1293,7 @@ class BaseAPI{
         if($sender instanceof Player){
             $this->getSession($sender)->removeQuickReply();
         }else{
-            $this->quickReply[strtolower($sender)] = false;
+            $this->quickReply[strtolower($sender->getName())] = false;
         }
     }
 
@@ -1444,7 +1445,7 @@ class BaseAPI{
      * @return null|Player
      */
     public function getPlayer($player): ?Player{
-        if(!$this->validateName($player, false)){
+        if(!Player::isValidUserName($player)){
             return null;
         }
         $player = strtolower($player);
@@ -2284,7 +2285,7 @@ class BaseAPI{
      */
     public function setVanish(Player $player, bool $state, bool $noPacket = false): bool{
         if($this->invisibilityEffect === null){
-            $effect = new Effect(Effect::INVISIBILITY, "Vanish", 127, 131, 146);
+            $effect = new Effect(Effect::INVISIBILITY, "Vanish", new Color(127, 131, 146));
             $effect->setDuration(INT32_MAX);
             $this->invisibilityEffect = $effect;
         }
